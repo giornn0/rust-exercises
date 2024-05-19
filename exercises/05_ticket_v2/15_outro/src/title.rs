@@ -2,7 +2,27 @@
 //   enforcing that the title is not empty and is not longer than 50 characters.
 //   Implement the traits required to make the tests pass too.
 
+use crate::ticket_errors::TicketError;
+
+#[derive(Debug, Clone, PartialEq)]
 pub struct TicketTitle(String);
+
+impl TryFrom<&str> for TicketTitle {
+    type Error = TicketError;
+    fn try_from(value: &str) -> Result<Self, Self::Error> {
+        match value.len() {
+            0 => Err(TicketError::Empty("title".to_owned())),
+            x if x > 50 => Err(TicketError::Longer("title".to_owned(), 50)),
+            _ => Ok(TicketTitle(value.to_owned())),
+        }
+    }
+}
+impl TryFrom<String> for TicketTitle {
+    type Error = TicketError;
+    fn try_from(value: String) -> Result<Self, Self::Error> {
+        TicketTitle::try_from(value.as_str())
+    }
+}
 
 #[cfg(test)]
 mod tests {

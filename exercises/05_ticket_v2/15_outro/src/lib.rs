@@ -1,6 +1,7 @@
 // TODO: you have something to do in each of the modules in this crate!
 mod description;
 mod status;
+mod ticket_errors;
 mod title;
 
 // A common pattern in Rust is to split code into multiple (private) modules

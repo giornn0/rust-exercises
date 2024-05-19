@@ -1,9 +1,27 @@
+use crate::ticket_errors::TicketError;
+
 // TODO: Implement `TryFrom<String>` and `TryFrom<&str>` for the `TicketDescription` type,
 //   enforcing that the description is not empty and is not longer than 500 characters.
 //   Implement the traits required to make the tests pass too.
-
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct TicketDescription(String);
 
+impl TryFrom<&str> for TicketDescription {
+    type Error = TicketError;
+    fn try_from(value: &str) -> Result<Self, Self::Error> {
+        match value.len() {
+            0 => Err(TicketError::Empty("description".to_owned())),
+            x if x > 500 => Err(TicketError::Longer("description".to_owned(), 500)),
+            _ => Ok(TicketDescription(value.to_owned())),
+        }
+    }
+}
+impl TryFrom<String> for TicketDescription {
+    type Error = TicketError;
+    fn try_from(value: String) -> Result<Self, Self::Error> {
+        TicketDescription::try_from(value.as_str())
+    }
+}
 #[cfg(test)]
 mod tests {
     use super::*;
