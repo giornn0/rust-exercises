@@ -3,11 +3,18 @@
 //   a `String` field into each variant.
 //   You'll also have to add `thiserror` as a dependency in the `Cargo.toml` file.
 
+use thiserror::Error;
+
+#[derive(Error, Debug)]
 enum TicketNewError {
-    TitleCannotBeEmpty,
-    TitleTooLong,
-    DescriptionCannotBeEmpty,
-    DescriptionTooLong,
+    #[error("{0} cannot be empty")]
+    TitleCannotBeEmpty(String),
+    #[error("{0} cannot be longer than {1} characters")]
+    TitleTooLong(String, u32),
+    #[error("{0} cannot be empty")]
+    DescriptionCannotBeEmpty(String),
+    #[error("{0} cannot be longer than {1} characters")]
+    DescriptionTooLong(String, u32),
 }
 
 #[derive(Debug, PartialEq, Clone)]
@@ -31,16 +38,21 @@ impl Ticket {
         status: Status,
     ) -> Result<Ticket, TicketNewError> {
         if title.is_empty() {
-            return Err(TicketNewError::TitleCannotBeEmpty);
+            return Err(TicketNewError::TitleCannotBeEmpty("Title".to_owned()));
         }
         if title.len() > 50 {
-            return Err(TicketNewError::TitleTooLong);
+            return Err(TicketNewError::TitleTooLong("Title".to_owned(), 50));
         }
         if description.is_empty() {
-            return Err(TicketNewError::DescriptionCannotBeEmpty);
+            return Err(TicketNewError::DescriptionCannotBeEmpty(
+                "Description".to_owned(),
+            ));
         }
         if description.len() > 500 {
-            return Err(TicketNewError::DescriptionTooLong);
+            return Err(TicketNewError::DescriptionTooLong(
+                "Description".to_owned(),
+                500,
+            ));
         }
 
         Ok(Ticket {
