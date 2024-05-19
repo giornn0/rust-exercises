@@ -1,3 +1,5 @@
+use core::panic;
+
 struct Ticket {
     title: String,
     description: String,
@@ -17,7 +19,28 @@ impl Ticket {
     // as well as some `String` methods. Use the documentation of Rust's standard library
     // to find the most appropriate options -> https://doc.rust-lang.org/std/string/struct.String.html
     fn new(title: String, description: String, status: String) -> Self {
-        todo!();
+        let empty_panic = |field: &str| panic!("{} cannot be empty", field);
+        let length_panic = |field: &str, max_length: u16| {
+            panic!("{} cannot be longer than {} characters", field, max_length)
+        };
+        let title_property = "Title";
+        let description_property = "Description";
+        if title.is_empty() {
+            empty_panic(title_property);
+        }
+        if description.is_empty() {
+            empty_panic(description_property);
+        }
+        if title.len() > 50 {
+            length_panic(title_property, 50);
+        }
+        if description.len() > 500 {
+            length_panic(description_property, 500);
+        }
+        match status.as_str() {
+            "In Progress" | "To-Do" | "Done" => (),
+            _ => panic!("Only `To-Do`, `In Progress`, and `Done` statuses are allowed"),
+        }
         Self {
             title,
             description,
