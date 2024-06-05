@@ -1,9 +1,11 @@
 // TODO: Flesh out the `WeekTemperatures` struct and its method implementations to pass the tests.
 
+#[derive(Clone)]
 pub struct WeekTemperatures {
-    // TODO
+    temperatures: Vec<(Weekday, i32)>,
 }
 
+#[derive(PartialEq, Clone)]
 pub enum Weekday {
     Monday,
     Tuesday,
@@ -16,15 +18,32 @@ pub enum Weekday {
 
 impl WeekTemperatures {
     pub fn new() -> Self {
-        todo!()
+        Self {
+            temperatures: vec![],
+        }
+    }
+    fn get_val_weekday(&self, day: Weekday) -> Option<(Weekday, i32)> {
+        self.temperatures.clone().into_iter().find(|d| d.0 == day)
     }
 
     pub fn get_temperature(&self, day: Weekday) -> Option<i32> {
-        todo!()
+        self.get_val_weekday(day).map(|d| d.1)
     }
 
     pub fn set_temperature(&mut self, day: Weekday, temperature: i32) {
-        todo!()
+        match self.get_val_weekday(day.clone()) {
+            Some(_) => {
+                let clone_temperature = self.temperatures.clone();
+                self.temperatures = clone_temperature
+                    .into_iter()
+                    .filter(|d| d.0 != day)
+                    .collect();
+                self.temperatures.push((day, temperature))
+            }
+            None => {
+                self.temperatures.push((day, temperature));
+            }
+        };
     }
 }
 
