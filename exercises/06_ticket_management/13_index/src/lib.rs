@@ -1,11 +1,27 @@
 // TODO: Implement `Index<&TicketId>` and `Index<TicketId>` for `TicketStore`.
 
-use ticket_fields::{TicketDescription, TicketTitle};
+use std::ops::Index;
 
+use ticket_fields::{TicketDescription, TicketTitle};
+const OUT_OF_BOUNDS_MSG: &str = "Ticket id out of bounds";
 #[derive(Clone)]
 pub struct TicketStore {
     tickets: Vec<Ticket>,
     counter: u64,
+}
+
+impl Index<&TicketId> for TicketStore {
+    type Output = Ticket;
+
+    fn index(&self, index: &TicketId) -> &Self::Output {
+        self.get(*index).expect(OUT_OF_BOUNDS_MSG)
+    }
+}
+impl Index<TicketId> for TicketStore {
+    type Output = Ticket;
+    fn index(&self, index: TicketId) -> &Self::Output {
+        self.get(index).expect(OUT_OF_BOUNDS_MSG)
+    }
 }
 
 #[derive(Clone, Copy, Debug, PartialEq)]
