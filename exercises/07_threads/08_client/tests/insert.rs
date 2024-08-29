@@ -12,8 +12,7 @@ fn insert_works() {
     };
     let ticket_id = client.insert(draft.clone());
 
-    let client2 = client.clone();
-    let ticket = client2.get(ticket_id).unwrap();
+    let ticket = client.get(ticket_id).unwrap();
     assert_eq!(ticket_id, ticket.id);
     assert_eq!(ticket.status, Status::ToDo);
     assert_eq!(ticket.title, draft.title);
