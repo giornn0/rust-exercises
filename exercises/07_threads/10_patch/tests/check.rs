@@ -27,4 +27,5 @@ fn works() {
 
     let ticket = client.get(ticket_id).unwrap().unwrap();
     assert_eq!(ticket_id, ticket.id);
+    assert_eq!(Status::InProgress, ticket.status);
 }
